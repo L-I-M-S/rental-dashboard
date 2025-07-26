@@ -1,0 +1,52 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}Rental Dashboard{% endblock %}
+
+{% block content %}
+<h1>Rental Property Dashboard</h1>
+
+<h2>QuickBooks Invoices</h2>
+{% if invoices %}
+<ul>
+    {% for invoice in invoices %}
+    <li>{{ invoice.CustomerRef.name }}: ${{ invoice.TotalAmt }}</li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>No invoices found.</p>
+{% endif %}
+
+<h2>Rent Payments</h2>
+{% if payments %}
+<ul>
+    {% for payment in payments %}
+    <li>{{ payment.tenant }} - ${{ payment.amount }} (Due: {{ payment.due_date }})</li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>No rent payments recorded.</p>
+{% endif %}
+
+<h2>Rent Collection Chart</h2>
+<canvas id="rentChart" width="400" height="200"></canvas>
+<script>
+    fetch("{% url 'rent_chart' %}")
+        .then(response => response.json())
+        .then(data => {
+            new Chart(document.getElementById('rentChart'), {
+                type: 'bar',
+                data: {
+                    labels: data.labels,
+                    datasets: data.datasets
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        });
+</script>
+{% endblock %}
