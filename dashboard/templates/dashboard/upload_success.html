@@ -1,0 +1,9 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}Upload Success{% endblock %}
+
+{% block content %}
+<h1>Excel File Uploaded Successfully!</h1>
+<a href="{% url 'upload_excel' %}">Upload Another File</a>
+<a href="{% url 'dashboard' %}">Back to Dashboard</a>
+{% endblock %}
